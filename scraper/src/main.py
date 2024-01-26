@@ -1,3 +1,6 @@
+"""
+Entry point for the scraper.
+"""
 from icecream import ic
 
 
