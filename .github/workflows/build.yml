@@ -28,7 +28,7 @@ jobs:
         uses: psf/black@stable
         with:
           options: '--check --verbose'
-          src: './src'
+          src: './scraper/src'
       - name: Run Python P
         run: |
           python -m scraper.src.main
