@@ -1,11 +1,17 @@
 """
 Tournament schema
 """
-from pydantic import BaseModel, Field
+
 from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class TournamentSchema(BaseModel):
+    """
+    Schema for a tournament.
+    """
+
     tournament_id: int = Field(..., alias="id")
     name: str
     slug: int
@@ -16,6 +22,10 @@ class TournamentSchema(BaseModel):
 
 
 class TourneyRoundSchema(BaseModel):
+    """
+    Schema for a tournament round.
+    """
+
     player_id: int
     score: int
     tournament: TournamentSchema
