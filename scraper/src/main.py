@@ -4,7 +4,7 @@ Entry point for the scraper.
 
 from icecream import ic
 
-from src.schemas import TournamentSchema
+from scraper.src.schemas import TournamentSchema
 
 
 def run():
