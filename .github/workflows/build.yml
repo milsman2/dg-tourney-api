@@ -29,7 +29,7 @@ jobs:
         with:
           options: '--check --verbose'
           src: './scraper/src'
-      - name: Run Python P
+      - name: Run Python Program
         run: |
           python -m scraper.src.main
       - run: echo "🍏 This job's status is ${{ job.status }}."
