@@ -4,21 +4,20 @@ Entry point for the scraper.
 
 from icecream import ic
 
-from scraper.src.schemas import TournamentSchema
+from scraper.src.models import DiscGolfer
 
 
 def run():
     ic()
-    tourney = TournamentSchema(
-        id=1,
-        name="test",
-        slug=1234,
-        city="test",
-        state="test",
-        phone=1234,
-        email="test",
+    disc_golfer = DiscGolfer(
+        id=2,
+        classification="Amateur",
+        last_name="Kane",
+        first_name="Miles",
+        career_events=25,
+        career_wins=4,
     )
-    ic(tourney)
+    ic(disc_golfer)
 
 
 if __name__ == "__main__":
