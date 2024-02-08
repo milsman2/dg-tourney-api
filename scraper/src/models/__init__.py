@@ -1,3 +1,7 @@
+"""
+Models package.
+"""
+
 from .base import Base
 from .disc_golfer import DiscGolfer
 
