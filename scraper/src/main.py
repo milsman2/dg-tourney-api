@@ -2,10 +2,13 @@
 Entry point for the scraper.
 """
 
-from icecream import ic
-from scraper.src.models import DiscGolfer, Base
 import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+
+from icecream import ic
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
+from scraper.src.config import settings
+from scraper.src.models import Base, DiscGolfer
 
 
 async def insert_objects(async_session: async_sessionmaker[AsyncSession]) -> None:
@@ -40,11 +43,10 @@ async def insert_objects(async_session: async_sessionmaker[AsyncSession]) -> Non
 async def run():
     ic()
     engine = create_async_engine(
-        "sqlite+aiosqlite:///scraper/src/disc_golfers.db",
-        echo=True,
+        f"postgresql+asyncpg://{settings.PG_USER}:{settings.PG_PW}@{settings.PG_HOST}/{settings.PG_DB}"
     )
-
     async with engine.begin() as conn:
+        ic()
         await conn.run_sync(Base.metadata.create_all)
 
     async_session = async_sessionmaker(engine, expire_on_commit=False)
