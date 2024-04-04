@@ -4,8 +4,10 @@ DiscGolfer model
 
 from __future__ import annotations
 
-from sqlalchemy.orm import Mapped, mapped_column
 from typing import Optional
+
+from sqlalchemy.orm import Mapped, mapped_column
+
 from .base import Base
 
 
