@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     PG_USER: str = "postgres_user"
     PG_HOST: str = "localhost"
     PG_DB: str = "postgres"
+    REDIS_HOST: str = "localhost"
+    REDIS_PW: str = "changeme"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
 
 
 settings = Settings()

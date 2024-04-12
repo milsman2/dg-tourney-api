@@ -5,7 +5,8 @@ Entry point for the scraper.
 import asyncio
 
 from icecream import ic
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
+                                    create_async_engine)
 
 from scraper.src.config import settings
 from scraper.src.models import Base, DiscGolfer
