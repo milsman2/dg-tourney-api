@@ -54,7 +54,7 @@ async def run():
             await redis_client.hset(disc_golfer_id, mapping=disc_golfer)
             await engine.dispose()
             return disc_golfer
-    await redis_client.close()
+    await redis_client.aclose()
 
 
 if __name__ == "__main__":
