@@ -51,7 +51,7 @@ async def run():
         await conn.run_sync(Base.metadata.create_all)
 
     async_session = async_sessionmaker(engine, expire_on_commit=False)
-    ic(async_session)
+    await insert_objects(async_session)
     await engine.dispose()
 
 
