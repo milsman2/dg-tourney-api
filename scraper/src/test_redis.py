@@ -4,7 +4,7 @@ Entry point for the scraper.
 
 import asyncio
 
-import redis.asyncio as redis
+import redis
 from icecream import ic
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -31,6 +31,23 @@ async def db_fetch(async_session: async_sessionmaker[AsyncSession]):
             return disc_golfer_obj
 
 
+async def cache_fetch(redis_client: redis.Redis, disc_golfer_id: str):
+    ic()
+    if redis_client.exists(disc_golfer_id):
+        disc_golfer = redis_client.hgetall(str(disc_golfer_id))
+        return disc_golfer
+    else:
+        engine = create_async_engine(
+            f"postgresql+asyncpg://{settings.PG_USER}:{settings.PG_PW}@{settings.PG_HOST}/{settings.PG_DB}"
+        )
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+        disc_golfer = await db_fetch(async_session)
+        if disc_golfer:
+            redis_client.hset(disc_golfer_id, mapping=disc_golfer)
+            await engine.dispose()
+            return disc_golfer
+
+
 async def run():
     ic()
     redis_client = redis.Redis(
@@ -39,22 +56,10 @@ async def run():
         password=settings.REDIS_PW,
         db=settings.REDIS_DB,
     )
-    engine = create_async_engine(
-        f"postgresql+asyncpg://{settings.PG_USER}:{settings.PG_PW}@{settings.PG_HOST}/{settings.PG_DB}"
-    )
-    async_session = async_sessionmaker(engine, expire_on_commit=False)
     disc_golfer_id = str(12626)
-    if await redis_client.exists(disc_golfer_id):
-        disc_golfer = await redis_client.hgetall(str(disc_golfer_id))
-        await engine.dispose()
-        return disc_golfer
-    else:
-        disc_golfer = await db_fetch(async_session)
-        if disc_golfer:
-            await redis_client.hset(disc_golfer_id, mapping=disc_golfer)
-            await engine.dispose()
-            return disc_golfer
-    await redis_client.aclose()
+    disc_golfer = await cache_fetch(redis_client, disc_golfer_id)
+    ic(disc_golfer)
+    redis_client.close()
 
 
 if __name__ == "__main__":
