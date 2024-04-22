@@ -12,7 +12,7 @@ certifi==2024.2.2
 click==8.1.7
 colorama==0.4.6
 dill==0.3.8
-exceptiongroup==1.2.0
+exceptiongroup==1.2.1
 executing==2.0.1
 greenlet==3.0.3
 h11==0.14.0
@@ -29,7 +29,7 @@ mypy-extensions==1.0.0
 packaging==24.0
 pathspec==0.12.1
 platformdirs==4.2.0
-pluggy==1.4.0
+pluggy==1.5.0
 psycopg2-binary==2.9.9
 pydantic==2.7.0
 pydantic-settings==2.2.1
