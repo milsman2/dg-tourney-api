@@ -7,14 +7,14 @@ import asyncio
 import redis
 from icecream import ic
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from scraper.src.config import settings
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from scraper.src.db import redis_client, async_session, engine
 from scraper.src.models import DiscGolfer
 
 
-async def db_fetch(async_session: async_sessionmaker[AsyncSession]):
+async def db_fetch(a_session: async_sessionmaker[AsyncSession]):
     ic()
-    async with async_session() as session:
+    async with a_session() as session:
         stmt = select(DiscGolfer).order_by(DiscGolfer.id)
         result = await session.execute(stmt)
         disc_golfer = result.scalars().first()
@@ -31,31 +31,20 @@ async def db_fetch(async_session: async_sessionmaker[AsyncSession]):
             return disc_golfer_obj
 
 
-async def cache_fetch(redis_client: redis.Redis, disc_golfer_id: str):
+async def cache_fetch(cache_client: redis.Redis, disc_golfer_id: str):
     ic()
-    if redis_client.exists(disc_golfer_id):
-        disc_golfer = redis_client.hgetall(str(disc_golfer_id))
-        return disc_golfer
+    if cache_client.exists(disc_golfer_id):
+        return cache_client.hgetall(str(disc_golfer_id))
     else:
-        engine = create_async_engine(
-            f"postgresql+asyncpg://{settings.PG_USER}:{settings.PG_PW}@{settings.PG_HOST}/{settings.PG_DB}"
-        )
-        async_session = async_sessionmaker(engine, expire_on_commit=False)
         disc_golfer = await db_fetch(async_session)
         if disc_golfer:
-            redis_client.hset(disc_golfer_id, mapping=disc_golfer)
+            cache_client.hset(disc_golfer_id, mapping=disc_golfer)
             await engine.dispose()
             return disc_golfer
 
 
 async def run():
     ic()
-    redis_client = redis.Redis(
-        host=settings.REDIS_HOST,
-        port=settings.REDIS_PORT,
-        password=settings.REDIS_PW,
-        db=settings.REDIS_DB,
-    )
     disc_golfer_id = str(12626)
     disc_golfer = await cache_fetch(redis_client, disc_golfer_id)
     ic(disc_golfer)
