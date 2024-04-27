@@ -1,5 +1,5 @@
 """
-DiscGolfer model
+Disc Golfer model
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from .base import Base
 
 
 class DiscGolfer(Base):
-    __tablename__ = "disc_golfer"
+    __tablename__ = "disc_golfers"
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
     classification: Mapped[str]

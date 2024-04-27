@@ -5,8 +5,7 @@ Entry point for the scraper.
 import asyncio
 
 from icecream import ic
-from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
-                                    create_async_engine)
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from scraper.src.config import settings
 from scraper.src.models import Base, DiscGolfer
@@ -47,7 +46,6 @@ async def run():
         f"postgresql+asyncpg://{settings.PG_USER}:{settings.PG_PW}@{settings.PG_HOST}/{settings.PG_DB}"
     )
     async with engine.begin() as conn:
-        ic()
         await conn.run_sync(Base.metadata.create_all)
 
     async_session = async_sessionmaker(engine, expire_on_commit=False)
